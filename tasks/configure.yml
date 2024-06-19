@@ -56,6 +56,16 @@
     creates: "{{ mysql_datadir }}/mysql"
   when: mysql_datadir != "/var/lib/mysql"
 
+- name: Configure apparmore ansible apparmor when mysql_datadir is customized 
+  ansible.builtin.copy:
+    dest: /etc/apparmor.d/usr.sbin.mysqld
+    owner: root
+    group: root
+    mode: '0644'
+    content: |
+      {{ mysql_datadir }}/ r,
+      {{ mysql_datadir }}/** rwk,
+
 - name: Set ownership on slow query log file (if configured).
   ansible.builtin.file:
     path: "{{ mysql_slow_query_log_file }}"
