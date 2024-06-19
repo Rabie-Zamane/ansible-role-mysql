@@ -65,6 +65,7 @@
     content: |
       {{ mysql_datadir }}/ r,
       {{ mysql_datadir }}/** rwk,
+    validate: apparmor_parser -r /etc/apparmor.d/usr.sbin.mysqld
 
 - name: Set ownership on slow query log file (if configured).
   ansible.builtin.file:
