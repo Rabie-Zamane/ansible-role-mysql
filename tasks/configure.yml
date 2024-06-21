@@ -50,17 +50,17 @@
     mode: 0755
     setype: mysqld_db_t
 
-- name: Initialize mysql when mysql_datadir is customized (MariaDB)
-  ansible.builtin.command: mysql_install_db
-  args:
-    creates: "{{ mysql_datadir }}/mysql"
-  when: mysql_datadir != "/var/lib/mysql"
-
 - name: Configure apparmore
   ansible.builtin.lineinfile: 
     path: /etc/apparmor.d/tunables/alias  
     line: "alias /var/lib/mysql/ ->  {{ mysql_datadir }}," 
     create: yes
+  when: mysql_datadir != "/var/lib/mysql"
+
+- name: Initialize mysql when mysql_datadir is customized (MariaDB)
+  ansible.builtin.command: mysql_install_db
+  args:
+    creates: "{{ mysql_datadir }}/mysql"
   when: mysql_datadir != "/var/lib/mysql"
 
 - name: Set ownership on slow query log file (if configured).
